@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/LuckeLucky/demo-analyser-csgo/analyser"
+	"github.com/LuckeLucky/demo-analyser-csgo/utils"
 )
 
 func main() {
@@ -25,17 +26,12 @@ func main() {
 			}
 
 			f, err := os.Open(path)
-			if err != nil {
-				panic(err)
-			}
-
-			fmt.Println(path, info.Size())
-
+			utils.CheckError(err)
 			defer f.Close()
 
 			fmt.Printf("Analyzing file: %s\n", f.Name())
-			a := analyser.NewAnalyser(f)
-			a.Run()
+			an := analyser.NewAnalyser(f)
+			an.Run()
 			fmt.Printf("Finished file: %s\n\n", f.Name())
 
 			return nil

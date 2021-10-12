@@ -1,9 +1,9 @@
 package analyser
 
 import (
-	"demo-analyser-csgo/utils/utils"
 	"os"
 
+	"github.com/LuckeLucky/demo-analyser-csgo/utils"
 	"github.com/gogo/protobuf/proto"
 
 	demoinfocs "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
@@ -11,23 +11,35 @@ import (
 )
 
 type Analyser struct {
-	parser demoinfocs.Parser
-
+	parser  demoinfocs.Parser
 	mapName string
 
-	//Team Scores -------------
+	//-------------------------
+
+	halfs []*Half
+	//Rounds ------------------
+	roundHandler *RoundHandler
+	roundsPlayed int
+
+	//Current ScoreBoard scores
 	ctScore int
 	tScore  int
 	//-------------------------
 
-	//flags -------------------
-	hasMatchStarted bool
-	hasMatchEnded   bool
-	isCancelled     bool
+	//Match flags -------------
+
+	//Convars set
+	isMoneySet bool
 	//-------------------------
+
+	//Convars -----------------
+	currentStartMoney float64
+	overtimeMaxRounds int
+	//-------------------------
+
 }
 
-func NewAnalyser(file *os.File) *Analyser {
+func NewAnalyser(f *os.File) *Analyser {
 
 	cfg := demoinfocs.DefaultParserConfig
 	cfg.AdditionalNetMessageCreators = map[int]demoinfocs.NetMessageCreator{
@@ -36,16 +48,17 @@ func NewAnalyser(file *os.File) *Analyser {
 		},
 	}
 
-	parser := demoinfocs.NewParserWithConfig(file, cfg)
-	defer parser.Close()
+	parser := demoinfocs.NewParserWithConfig(f, cfg)
 
-	analyser := &Analyser{parser: parser}
+	analyser := &Analyser{}
+	analyser.parser = parser
 
 	return analyser
 
 }
 
 func (analyser *Analyser) handleHeader() {
+
 	header, err := analyser.parser.ParseHeader()
 	utils.CheckError(err)
 	analyser.mapName = header.MapName
@@ -53,12 +66,16 @@ func (analyser *Analyser) handleHeader() {
 
 func (analyser *Analyser) Run() {
 	analyser.handleHeader()
+	analyser.setDefault()
 
-	//analyser.registerNetMessageHandlers()
+	analyser.roundHandler = new(RoundHandler)
+
+	analyser.registerNetMessageHandlers()
 	analyser.registerMatchEventHandlers()
-	//analyser.registerFirstPlayerEventHandlers()
 
-	for hasMoreFrames, err := true, error(nil); hasMoreFrames; hasMoreFrames, err = analyser.parser.ParseNextFrame() {
+	var err error
+	for ok := true; ok; ok, err = analyser.parser.ParseNextFrame() {
 		utils.CheckError(err)
 	}
+
 }
