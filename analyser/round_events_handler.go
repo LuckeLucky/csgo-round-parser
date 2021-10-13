@@ -7,8 +7,7 @@ import (
 )
 
 type RoundHandler struct {
-	roundStartTick int
-	roundEndTick   int
+	roundStarted bool
 
 	halfCtScore int
 	halfTScore  int
@@ -23,7 +22,7 @@ type Half struct {
 }
 
 func (analyser *Analyser) handlerRoundStart(e interface{}) {
-	tick, err := analyser.getGameTick()
+	_, err := analyser.getGameTick()
 	if err {
 
 		return
@@ -41,17 +40,22 @@ func (analyser *Analyser) handlerRoundStart(e interface{}) {
 	}
 
 	if !analyser.checkValidRoundStartMoney() {
-		utils.PrintDebug("2")
 		return
 	}
-
-	analyser.roundHandler.roundStartTick = tick
+	if !analyser.checkFreeArmor() {
+		return
+	}
+	analyser.roundHandler.roundStarted = true
 
 }
 
 func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
-	tick, err := analyser.getGameTick()
+	_, err := analyser.getGameTick()
 	if err {
+		return
+	}
+
+	if !analyser.roundHandler.roundStarted {
 		return
 	}
 
@@ -70,7 +74,7 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 		analyser.ctScore = e.LoserState.Score()
 	}
 
-	analyser.roundHandler.roundEndTick = tick
+	analyser.roundHandler.roundStarted = false
 	analyser.roundsPlayed++
 
 	if analyser.checkMatchEnd() {

@@ -16,6 +16,8 @@ func (analyser *Analyser) registerNetMessageHandlers() {
 			} else if cvar.Name == "mp_startmoney" {
 				analyser.currentStartMoney, _ = strconv.ParseFloat(cvar.Value, 64)
 				analyser.isMoneySet = true
+			} else if cvar.Name == "mp_free_armor" {
+				analyser.freeArmor, _ = strconv.Atoi(cvar.Value)
 			}
 		}
 	})

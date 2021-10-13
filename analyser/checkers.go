@@ -54,3 +54,7 @@ func (analyser *Analyser) checkMatchEnd() bool {
 
 	return false
 }
+
+func (analyser *Analyser) checkFreeArmor() bool {
+	return analyser.freeArmor == 0
+}

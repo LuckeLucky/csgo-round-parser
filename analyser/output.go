@@ -18,7 +18,7 @@ func (analyser *Analyser) printHalfs() {
 	for i, half := range analyser.halfs {
 		if i == 0 {
 			firstCtNme = half.ctName
-			fmt.Printf("Half  |%.6s|%.6s\n", half.ctName, half.tName)
+			fmt.Printf("Half  |%.6s|%.6s\n", utils.PadSpaceEnd(half.ctName, 6), utils.PadSpaceEnd(half.tName, 6))
 		}
 		printScoresHalf(half, i+1, half.ctName == firstCtNme)
 	}
