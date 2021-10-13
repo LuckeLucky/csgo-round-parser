@@ -27,6 +27,15 @@ func (analyser *Analyser) checkMatchHalf() bool {
 	if analyser.roundsPlayed == MAX_ROUNDS_REGULAR/2 {
 		return true
 	}
+
+	ctScore, tScore := analyser.ctScore, analyser.tScore
+	// overtime
+	roundsInOvertime := ctScore + tScore - MAX_ROUNDS_REGULAR
+	if roundsInOvertime == 0 && ctScore == tScore {
+		return true
+	} else if roundsInOvertime > 0 {
+		return roundsInOvertime%(analyser.overtimeMaxRounds/2) == 0
+	}
 	return false
 }
 

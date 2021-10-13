@@ -22,17 +22,26 @@ type Half struct {
 	halfTScore  int
 }
 
-func (analyser *Analyser) handlerRoundStart(e events.RoundStart) {
+func (analyser *Analyser) handlerRoundStart(e interface{}) {
 	tick, err := analyser.getGameTick()
 	if err {
+
 		return
 	}
 	// Rounds Time Limit equal to 1m55s == 115s
-	if e.TimeLimit != 115 {
-		return
+	switch switchEvents := e.(type) {
+	case events.RoundStart:
+		if switchEvents.TimeLimit != 115 {
+			return
+		}
+	case events.MatchStartedChanged:
+		if !switchEvents.NewIsStarted {
+			return
+		}
 	}
 
 	if !analyser.checkValidRoundStartMoney() {
+		utils.PrintDebug("2")
 		return
 	}
 
@@ -43,10 +52,6 @@ func (analyser *Analyser) handlerRoundStart(e events.RoundStart) {
 func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 	tick, err := analyser.getGameTick()
 	if err {
-		return
-	}
-
-	if analyser.roundHandler.roundStartTick == 0 {
 		return
 	}
 
@@ -68,7 +73,16 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 	analyser.roundHandler.roundEndTick = tick
 	analyser.roundsPlayed++
 
-	if analyser.checkMatchHalf() {
+	if analyser.checkMatchEnd() {
+		utils.PrintDebug("---Finish---")
+		analyser.halfs = append(analyser.halfs, &Half{
+			ctName:      analyser.parser.GameState().TeamCounterTerrorists().ClanName(),
+			tName:       analyser.parser.GameState().TeamTerrorists().ClanName(),
+			halfCtScore: analyser.roundHandler.halfCtScore,
+			halfTScore:  analyser.roundHandler.halfTScore,
+		})
+
+	} else if analyser.checkMatchHalf() {
 		utils.PrintDebug("---HALF---")
 		analyser.halfs = append(analyser.halfs, &Half{
 			ctName:      analyser.parser.GameState().TeamCounterTerrorists().ClanName(),
@@ -77,16 +91,8 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 			halfTScore:  analyser.roundHandler.halfTScore,
 		})
 		analyser.roundHandler.resetHalfScores()
-
-	} else if analyser.checkMatchEnd() {
-		utils.PrintDebug("---Finish---")
-		analyser.halfs = append(analyser.halfs, &Half{
-			ctName:      analyser.parser.GameState().TeamCounterTerrorists().ClanName(),
-			tName:       analyser.parser.GameState().TeamTerrorists().ClanName(),
-			halfCtScore: analyser.roundHandler.halfCtScore,
-			halfTScore:  analyser.roundHandler.halfTScore,
-		})
 	}
+
 }
 
 func (rh *RoundHandler) resetHalfScores() {
