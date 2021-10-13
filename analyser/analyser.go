@@ -78,4 +78,6 @@ func (analyser *Analyser) Run() {
 		utils.CheckError(err)
 	}
 
+	analyser.printHalfs()
+	analyser.printMap()
 }

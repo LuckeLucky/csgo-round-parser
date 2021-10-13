@@ -2,6 +2,8 @@ package utils
 
 import (
 	"fmt"
+	"runtime"
+	"strings"
 
 	"github.com/fatih/color"
 )
@@ -30,4 +32,15 @@ func Abs(x int) int {
 		return -x
 	}
 	return x
+}
+
+func IsWindows() bool {
+	return runtime.GOOS == "windows"
+}
+
+func PadSpaceEnd(text string, count int) string {
+	if len(text) >= count {
+		return text
+	}
+	return text + strings.Repeat(" ", count-len(text))
 }

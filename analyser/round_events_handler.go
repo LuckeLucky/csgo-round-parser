@@ -80,6 +80,12 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 
 	} else if analyser.checkMatchEnd() {
 		utils.PrintDebug("---Finish---")
+		analyser.halfs = append(analyser.halfs, &Half{
+			ctName:      analyser.parser.GameState().TeamCounterTerrorists().ClanName(),
+			tName:       analyser.parser.GameState().TeamTerrorists().ClanName(),
+			halfCtScore: analyser.roundHandler.halfCtScore,
+			halfTScore:  analyser.roundHandler.halfTScore,
+		})
 	}
 }
 
