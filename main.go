@@ -32,6 +32,8 @@ func main() {
 			fmt.Printf("Analyzing file: %s\n", f.Name())
 			an := analyser.NewAnalyser(f)
 			an.Run()
+			newName := analyser.GetDemoNameWithDetails()
+			os.Rename(path, "./demos/"+newName)
 			fmt.Printf("Finished file: %s\n\n", f.Name())
 
 			return nil

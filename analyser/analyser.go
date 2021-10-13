@@ -1,6 +1,7 @@
 package analyser
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
@@ -81,4 +82,10 @@ func (analyser *Analyser) Run() {
 
 	analyser.printHalfs()
 	analyser.printMap()
+	fmt.Printf("Rounds played:%d\n", analyser.roundsPlayed)
+}
+
+func (analyser *Analyser) GetDemoNameWithDetails() (name string) {
+	name = fmt.Sprintf("%s_vs_%s_%s", analyser.halfs[0].ctName, analyser.halfs[0].tName, analyser.mapName)
+	return name
 }
