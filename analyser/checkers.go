@@ -18,9 +18,10 @@ func (analyser *Analyser) checkValidRoundStartMoney() bool {
 	// between 0 - 30 rounds start money is 800
 	if analyser.roundsPlayed < 30 {
 		return analyser.currentStartMoney == 800
+	} else {
+		return analyser.currentStartMoney == 16000 || analyser.currentOvertimeStartMoney == 16000
 	}
 
-	return false
 }
 
 func (analyser *Analyser) checkMatchHalf() bool {

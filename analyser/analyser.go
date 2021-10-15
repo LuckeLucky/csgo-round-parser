@@ -34,9 +34,10 @@ type Analyser struct {
 	//-------------------------
 
 	//Convars -----------------
-	currentStartMoney float64
-	overtimeMaxRounds int
-	freeArmor         int
+	currentStartMoney         float64
+	currentOvertimeStartMoney float64
+	overtimeMaxRounds         int
+	freeArmor                 int
 	//-------------------------
 
 }

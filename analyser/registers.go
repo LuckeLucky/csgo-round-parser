@@ -18,6 +18,9 @@ func (analyser *Analyser) registerNetMessageHandlers() {
 				analyser.isMoneySet = true
 			} else if cvar.Name == "mp_free_armor" {
 				analyser.freeArmor, _ = strconv.Atoi(cvar.Value)
+			} else if cvar.Name == "mp_overtime_startmoney" {
+				/*sometimes mp_overtime_startmoney is used instead of start_money for overtimes*/
+				analyser.currentOvertimeStartMoney, _ = strconv.ParseFloat(cvar.Value, 64)
 			}
 		}
 	})
