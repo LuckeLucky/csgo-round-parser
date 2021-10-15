@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/LuckeLucky/demo-analyser-csgo/analyser"
+
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
 )
 
@@ -32,9 +33,13 @@ func main() {
 			fmt.Printf("Analyzing file: %s\n", f.Name())
 			an := analyser.NewAnalyser(f)
 			an.Run()
-			newName := analyser.GetDemoNameWithDetails()
-			os.Rename(path, "./demos/"+newName)
 			fmt.Printf("Finished file: %s\n\n", f.Name())
+			f.Close()
+			/*newName := an.GetDemoNameWithDetails()
+			err = os.Rename(path, "analysed-demos/"+newName+".dem")
+			if err != nil {
+				fmt.Printf("error renaming file: %s", err)
+			}*/
 
 			return nil
 		})

@@ -58,3 +58,13 @@ func (analyser *Analyser) checkMatchEnd() bool {
 func (analyser *Analyser) checkFreeArmor() bool {
 	return analyser.freeArmor == 0
 }
+
+func (analyser *Analyser) checkFirstRoundStartEquipmentValue() bool {
+	if analyser.roundsPlayed > 0 {
+		return true
+	}
+
+	// 1000 = 5xglock or usp
+	return analyser.parser.GameState().TeamCounterTerrorists().RoundStartEquipmentValue() == 1000 &&
+		analyser.parser.GameState().TeamTerrorists().RoundStartEquipmentValue() == 1000
+}

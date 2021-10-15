@@ -3,8 +3,8 @@ module github.com/LuckeLucky/demo-analyser-csgo
 go 1.14
 
 require (
-	github.com/fatih/color v1.13.0 // indirect
-	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/fatih/color v1.13.0
+	github.com/gogo/protobuf v1.3.2
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/markus-wa/demoinfocs-golang/v2 v2.10.1
 	github.com/stretchr/objx v0.1.1 // indirect

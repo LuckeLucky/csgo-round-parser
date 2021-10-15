@@ -45,6 +45,9 @@ func (analyser *Analyser) handlerRoundStart(e interface{}) {
 	if !analyser.checkFreeArmor() {
 		return
 	}
+	if !analyser.checkFirstRoundStartEquipmentValue() {
+		return
+	}
 	analyser.roundHandler.roundStarted = true
 
 }
