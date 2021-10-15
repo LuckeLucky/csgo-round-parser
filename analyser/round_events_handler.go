@@ -6,13 +6,6 @@ import (
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
 
-type RoundHandler struct {
-	roundStarted bool
-
-	halfCtScore int
-	halfTScore  int
-}
-
 type Half struct {
 	ctName string
 	tName  string
@@ -21,8 +14,13 @@ type Half struct {
 	halfTScore  int
 }
 
+type Round struct {
+	startTick int
+	endTick   int
+}
+
 func (analyser *Analyser) handlerRoundStart(e interface{}) {
-	_, err := analyser.getGameTick()
+	tick, err := analyser.getGameTick()
 	if err {
 
 		return
@@ -31,39 +29,35 @@ func (analyser *Analyser) handlerRoundStart(e interface{}) {
 	switch switchEvents := e.(type) {
 	case events.RoundStart:
 		if switchEvents.TimeLimit != 115 {
-			utils.PrintDebug("1")
 			return
 		}
 	case events.MatchStartedChanged:
 		if !switchEvents.NewIsStarted {
-			utils.PrintDebug("2")
 			return
 		}
 	}
 
 	if !analyser.checkValidRoundStartMoney() {
-		utils.PrintDebug("3")
 		return
 	}
 	if !analyser.checkFreeArmor() {
-		utils.PrintDebug("4")
 		return
 	}
 	if !analyser.checkFirstRoundStartEquipmentValue() {
-		utils.PrintDebug("5")
 		return
 	}
-	analyser.roundHandler.roundStarted = true
+	analyser.roundStarted = true
+	analyser.currentRound = &Round{startTick: tick}
 
 }
 
 func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
-	_, err := analyser.getGameTick()
+	tick, err := analyser.getGameTick()
 	if err {
 		return
 	}
 
-	if !analyser.roundHandler.roundStarted {
+	if !analyser.roundStarted {
 		return
 	}
 
@@ -71,43 +65,27 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 	case common.TeamCounterTerrorists:
 		utils.PrintScores(e.WinnerState.ClanName(), e.LoserState.ClanName(),
 			e.WinnerState.Score()+1, e.LoserState.Score())
-		analyser.roundHandler.halfCtScore++
+		analyser.halfCtScore++
 		analyser.ctScore = e.WinnerState.Score() + 1
 		analyser.tScore = e.LoserState.Score()
 	case common.TeamTerrorists:
 		utils.PrintScores(e.LoserState.ClanName(), e.WinnerState.ClanName(),
 			e.LoserState.Score(), e.WinnerState.Score()+1)
-		analyser.roundHandler.halfTScore++
+		analyser.halfTScore++
 		analyser.tScore = e.WinnerState.Score() + 1
 		analyser.ctScore = e.LoserState.Score()
 	}
 
-	analyser.roundHandler.roundStarted = false
-	analyser.roundsPlayed++
+	analyser.registerRoundEnd(tick)
 
-	if analyser.checkMatchEnd() {
-		utils.PrintDebug("---Finish---")
-		analyser.halfs = append(analyser.halfs, &Half{
-			ctName:      analyser.parser.GameState().TeamCounterTerrorists().ClanName(),
-			tName:       analyser.parser.GameState().TeamTerrorists().ClanName(),
-			halfCtScore: analyser.roundHandler.halfCtScore,
-			halfTScore:  analyser.roundHandler.halfTScore,
-		})
-
-	} else if analyser.checkMatchHalf() {
-		utils.PrintDebug("---HALF---")
-		analyser.halfs = append(analyser.halfs, &Half{
-			ctName:      analyser.parser.GameState().TeamCounterTerrorists().ClanName(),
-			tName:       analyser.parser.GameState().TeamTerrorists().ClanName(),
-			halfCtScore: analyser.roundHandler.halfCtScore,
-			halfTScore:  analyser.roundHandler.halfTScore,
-		})
-		analyser.roundHandler.resetHalfScores()
+	isEnd, isHalf := analyser.checkMatchEnd(), analyser.checkMatchHalf()
+	if isEnd || isHalf {
+		analyser.setNewHalf()
+		if isEnd {
+			utils.PrintDebug("---Finish---")
+		} else {
+			utils.PrintDebug("---HALF---")
+			analyser.resetHalfScores()
+		}
 	}
-
-}
-
-func (rh *RoundHandler) resetHalfScores() {
-	rh.halfCtScore = 0
-	rh.halfTScore = 0
 }

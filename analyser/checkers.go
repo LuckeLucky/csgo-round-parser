@@ -65,7 +65,7 @@ func (analyser *Analyser) checkFirstRoundStartEquipmentValue() bool {
 		return true
 	}
 
-	// 1000 = 5xglock or usp
+	// 1000 = 5xglock or 5xusp
 	return analyser.parser.GameState().TeamCounterTerrorists().RoundStartEquipmentValue() == 1000 &&
 		analyser.parser.GameState().TeamTerrorists().RoundStartEquipmentValue() == 1000
 }

@@ -8,3 +8,15 @@ func (analyser *Analyser) getGameTick() (int, bool) {
 	}
 	return tick, err
 }
+
+func (analyser *Analyser) getAllPlayersRoundStartMoney() (money int) {
+	if analyser.players == nil || len(analyser.players) == 0 {
+		return 0
+	}
+
+	for _, p := range analyser.players {
+		money += p.RoundStartMoney()
+	}
+
+	return
+}

@@ -32,7 +32,7 @@ func main() {
 
 			fmt.Printf("Analyzing file: %s\n", f.Name())
 			an := analyser.NewAnalyser(f)
-			an.Run()
+			an.SimpleRun()
 			fmt.Printf("Finished file: %s\n\n", f.Name())
 			f.Close()
 			/*newName := an.GetDemoNameWithDetails()

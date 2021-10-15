@@ -1,9 +1,11 @@
 package analyser
 
 import (
+	"bytes"
 	"fmt"
-	"os"
+	"io"
 
+	p_common "github.com/LuckeLucky/demo-analyser-csgo/common"
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
 	"github.com/gogo/protobuf/proto"
 
@@ -13,14 +15,18 @@ import (
 
 type Analyser struct {
 	parser  demoinfocs.Parser
+	buf     *bytes.Buffer
+	cfg     demoinfocs.ParserConfig
 	mapName string
 
-	//-------------------------
-
-	halfs []*Half
-	//Rounds ------------------
-	roundHandler *RoundHandler
+	rounds       []*Round
+	currentRound *Round
 	roundsPlayed int
+	halfs        []*Half
+
+	halfCtScore  int
+	halfTScore   int
+	roundStarted bool
 
 	//Current ScoreBoard scores
 	ctScore int
@@ -40,20 +46,21 @@ type Analyser struct {
 	freeArmor                 int
 	//-------------------------
 
+	players []*p_common.Player
 }
 
-func NewAnalyser(f *os.File) *Analyser {
-
-	cfg := demoinfocs.DefaultParserConfig
-	cfg.AdditionalNetMessageCreators = map[int]demoinfocs.NetMessageCreator{
+func NewAnalyser(demostream io.Reader) *Analyser {
+	analyser := &Analyser{}
+	analyser.buf = &bytes.Buffer{}
+	demostream = io.TeeReader(demostream, analyser.buf)
+	analyser.cfg = demoinfocs.DefaultParserConfig
+	analyser.cfg.AdditionalNetMessageCreators = map[int]demoinfocs.NetMessageCreator{
 		6: func() proto.Message {
 			return new(msg.CNETMsg_SetConVar)
 		},
 	}
 
-	parser := demoinfocs.NewParserWithConfig(f, cfg)
-
-	analyser := &Analyser{}
+	parser := demoinfocs.NewParserWithConfig(demostream, analyser.cfg)
 	analyser.parser = parser
 
 	return analyser
@@ -67,11 +74,9 @@ func (analyser *Analyser) handleHeader() {
 	analyser.mapName = header.MapName
 }
 
-func (analyser *Analyser) Run() {
+func (analyser *Analyser) SimpleRun() {
 	analyser.handleHeader()
 	analyser.setDefault()
-
-	analyser.roundHandler = new(RoundHandler)
 
 	analyser.registerNetMessageHandlers()
 	analyser.registerMatchEventHandlers()
@@ -84,6 +89,12 @@ func (analyser *Analyser) Run() {
 	analyser.printHalfs()
 	analyser.printMap()
 	fmt.Printf("Rounds played:%d\n", analyser.roundsPlayed)
+	fmt.Printf("Rounds played:%d\n", len(analyser.rounds))
+}
+
+func (analyser *Analyser) RunAndAnalyse() {
+	analyser.resetParser()
+	return
 }
 
 func (analyser *Analyser) GetDemoNameWithDetails() (name string) {
