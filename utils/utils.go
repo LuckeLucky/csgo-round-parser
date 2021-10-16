@@ -15,7 +15,7 @@ func CheckError(err error) {
 }
 
 func PrintDebug(text string) {
-	test := true
+	test := false
 	if test {
 		fmt.Print(text + "\n")
 	}

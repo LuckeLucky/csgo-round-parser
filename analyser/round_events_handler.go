@@ -1,6 +1,8 @@
 package analyser
 
 import (
+	"fmt"
+
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
@@ -83,9 +85,9 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 	if isEnd || isHalf {
 		analyser.setNewHalf()
 		if isEnd {
-			utils.PrintDebug("---Finish---")
+			fmt.Println("---Finish---")
 		} else {
-			utils.PrintDebug("---HALF---")
+			fmt.Println("---HALF---")
 			analyser.resetHalfScores()
 		}
 	}
