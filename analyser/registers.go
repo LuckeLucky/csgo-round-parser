@@ -36,12 +36,12 @@ func (analyser *Analyser) registerMatchEventHandlers() {
 
 }
 
-func (analyser *Analyser) registerRoundEnd(tick int) {
-	analyser.roundStarted = false
-	analyser.currentRound.endTick = tick
-	analyser.rounds = append(analyser.rounds, analyser.currentRound)
-	analyser.roundsPlayed++
+func (analyser *Analyser) registerAnalyseEventHandlers() {
+	//Round start
+	analyser.parser.RegisterEventHandler(func(e events.RoundStart) { analyser.handlerRoundStartValid() })
+	analyser.parser.RegisterEventHandler(func(e events.MatchStartedChanged) { analyser.handlerRoundStartValid() })
+	//Round ends
+	analyser.parser.RegisterEventHandler(func(e events.RoundEnd) { analyser.handlerRoundEndValid() })
 
-	analyser.currentRound = nil
-
+	analyser.parser.RegisterEventHandler(func(e events.Kill) { analyser.handlerKills(e) })
 }

@@ -79,7 +79,7 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 		analyser.ctScore = e.LoserState.Score()
 	}
 	analyser.printScore()
-	analyser.registerRoundEnd(tick)
+	analyser.setRound(tick)
 
 	isEnd, isHalf := analyser.checkMatchEnd(), analyser.checkMatchHalf()
 	if isEnd || isHalf {
@@ -91,4 +91,35 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 			analyser.resetHalfScores()
 		}
 	}
+}
+
+func (analyser *Analyser) handlerRoundStartValid() {
+	tick, err := analyser.getGameTick()
+	if err || len(analyser.rounds) == analyser.roundsPlayed {
+		return
+	}
+
+	if tick != analyser.rounds[analyser.roundsPlayed].startTick {
+		return
+	}
+
+	//first round
+	if analyser.roundsPlayed == 0 {
+		analyser.setPlayers()
+	}
+	analyser.inRound = true
+}
+
+func (analyser *Analyser) handlerRoundEndValid() {
+	tick, err := analyser.getGameTick()
+	if err || len(analyser.rounds) == analyser.roundsPlayed {
+		return
+	}
+
+	if tick != analyser.rounds[analyser.roundsPlayed].endTick {
+		return
+	}
+
+	analyser.roundsPlayed++
+	analyser.inRound = false
 }

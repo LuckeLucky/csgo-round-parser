@@ -18,3 +18,13 @@ func (analyser *Analyser) setNewHalf() {
 		halfTScore:  analyser.halfTScore,
 	})
 }
+
+func (analyser *Analyser) setRound(tick int) {
+	analyser.roundStarted = false
+	analyser.currentRound.endTick = tick
+	analyser.rounds = append(analyser.rounds, analyser.currentRound)
+	analyser.roundsPlayed++
+
+	analyser.currentRound = nil
+
+}

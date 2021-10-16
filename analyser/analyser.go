@@ -42,6 +42,7 @@ type Analyser struct {
 	freeArmor                 int
 
 	//Vars for a 2nd parse
+	inRound bool
 	players []*p_common.Player
 }
 
@@ -85,11 +86,21 @@ func (analyser *Analyser) SimpleRun() {
 	analyser.printHalfs()
 	analyser.printMap()
 	fmt.Printf("Rounds played:%d\n", analyser.roundsPlayed)
-	fmt.Printf("Rounds played:%d\n", len(analyser.rounds))
 }
 
 func (analyser *Analyser) RunAndAnalyse() {
 	analyser.resetParser()
+	analyser.roundsPlayed = 0
+
+	analyser.registerAnalyseEventHandlers()
+
+	var err error
+	for ok := true; ok; ok, err = analyser.parser.ParseNextFrame() {
+		utils.CheckError(err)
+	}
+
+	fmt.Printf("rounds:%d\n", analyser.roundsPlayed)
+
 }
 
 func (analyser *Analyser) GetDemoNameWithDetails() (name string) {
