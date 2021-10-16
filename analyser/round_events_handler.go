@@ -29,21 +29,26 @@ func (analyser *Analyser) handlerRoundStart(e interface{}) {
 	switch switchEvents := e.(type) {
 	case events.RoundStart:
 		if switchEvents.TimeLimit != 115 {
+			utils.PrintDebug("1")
 			return
 		}
 	case events.MatchStartedChanged:
 		if !switchEvents.NewIsStarted {
+			utils.PrintDebug("2")
 			return
 		}
 	}
 
 	if !analyser.checkValidRoundStartMoney() {
+		utils.PrintDebug("3")
 		return
 	}
 	if !analyser.checkFreeArmor() {
+		utils.PrintDebug("4")
 		return
 	}
 	if !analyser.checkFirstRoundStartEquipmentValue() {
+		utils.PrintDebug("5")
 		return
 	}
 	analyser.roundStarted = true

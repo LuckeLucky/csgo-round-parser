@@ -10,6 +10,10 @@ import (
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
 )
 
+func init() {
+	utils.ReadConfigFile()
+}
+
 func main() {
 	err := filepath.Walk("demos/",
 		func(path string, info os.FileInfo, err error) error {

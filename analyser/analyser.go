@@ -14,7 +14,9 @@ import (
 )
 
 type Analyser struct {
-	parser  demoinfocs.Parser
+	parser demoinfocs.Parser
+
+	//buf and cfg will allow for a secon parse
 	buf     *bytes.Buffer
 	cfg     demoinfocs.ParserConfig
 	mapName string
@@ -23,29 +25,23 @@ type Analyser struct {
 	currentRound *Round
 	roundsPlayed int
 	halfs        []*Half
-
-	halfCtScore  int
-	halfTScore   int
 	roundStarted bool
 
 	//Current ScoreBoard scores
 	ctScore int
 	tScore  int
-	//-------------------------
-
-	//Match flags -------------
-
-	//Convars set
-	isMoneySet bool
-	//-------------------------
+	//half scores
+	halfCtScore int
+	halfTScore  int
 
 	//Convars -----------------
-	currentStartMoney         float64
-	currentOvertimeStartMoney float64
+	isMoneySet                bool
+	currentStartMoney         int
+	currentOvertimeStartMoney int
 	overtimeMaxRounds         int
 	freeArmor                 int
-	//-------------------------
 
+	//Vars for a 2nd parse
 	players []*p_common.Player
 }
 
@@ -94,7 +90,6 @@ func (analyser *Analyser) SimpleRun() {
 
 func (analyser *Analyser) RunAndAnalyse() {
 	analyser.resetParser()
-	return
 }
 
 func (analyser *Analyser) GetDemoNameWithDetails() (name string) {
