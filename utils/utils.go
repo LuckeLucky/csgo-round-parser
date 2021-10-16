@@ -15,7 +15,7 @@ func CheckError(err error) {
 }
 
 func PrintDebug(text string) {
-	test := false
+	test := viper.GetBool("debug")
 	if test {
 		fmt.Print(text + "\n")
 	}

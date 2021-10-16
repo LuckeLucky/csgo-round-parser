@@ -6,7 +6,7 @@ import (
 
 func (analyser *Analyser) setPlayers() {
 	for _, p := range analyser.parser.GameState().Participants().Playing() {
-		analyser.players = append(analyser.players, &p_common.Player{Player: p})
+		analyser.players[p.SteamID64] = &p_common.Player{Player: p}
 	}
 }
 

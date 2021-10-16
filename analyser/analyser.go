@@ -43,7 +43,7 @@ type Analyser struct {
 
 	//Vars for a 2nd parse
 	inRound bool
-	players []*p_common.Player
+	players map[uint64]*p_common.Player
 }
 
 func NewAnalyser(demostream io.Reader) *Analyser {
@@ -91,15 +91,17 @@ func (analyser *Analyser) SimpleRun() {
 func (analyser *Analyser) RunAndAnalyse() {
 	analyser.resetParser()
 	analyser.roundsPlayed = 0
+	analyser.players = make(map[uint64]*p_common.Player)
 
 	analyser.registerAnalyseEventHandlers()
 
 	var err error
+
 	for ok := true; ok; ok, err = analyser.parser.ParseNextFrame() {
 		utils.CheckError(err)
 	}
 
-	fmt.Printf("rounds:%d\n", analyser.roundsPlayed)
+	analyser.printScoreBoard()
 
 }
 

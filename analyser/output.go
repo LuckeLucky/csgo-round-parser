@@ -57,3 +57,9 @@ func (analyser *Analyser) printScore() {
 		fmt.Printf("%s vs %s  %d : %d\n", color.BlueString(ctName), color.RedString(tName), analyser.ctScore, analyser.tScore)
 	}
 }
+
+func (analyser *Analyser) printScoreBoard() {
+	for _, player := range analyser.players {
+		fmt.Printf("%10s|%5d|%5d|%5d\n", player.Name, player.GetKills(), player.GetDeaths(), player.Assists())
+	}
+}
