@@ -59,7 +59,8 @@ func (analyser *Analyser) printScore() {
 }
 
 func (analyser *Analyser) printScoreBoard() {
+	fmt.Printf("%15s|%5s|%5s|%5s\n", "Name", "K", "D", "A")
 	for _, player := range analyser.players {
-		fmt.Printf("%10s|%5d|%5d|%5d\n", player.Name, player.GetKills(), player.GetDeaths(), player.Assists())
+		fmt.Printf("%15s|%5d|%5d|%5d\n", player.Name, player.GetKills(), player.GetDeaths(), player.Assists())
 	}
 }
