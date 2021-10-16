@@ -68,19 +68,15 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 
 	switch e.Winner {
 	case common.TeamCounterTerrorists:
-		utils.PrintScores(e.WinnerState.ClanName(), e.LoserState.ClanName(),
-			e.WinnerState.Score()+1, e.LoserState.Score())
 		analyser.halfCtScore++
 		analyser.ctScore = e.WinnerState.Score() + 1
 		analyser.tScore = e.LoserState.Score()
 	case common.TeamTerrorists:
-		utils.PrintScores(e.LoserState.ClanName(), e.WinnerState.ClanName(),
-			e.LoserState.Score(), e.WinnerState.Score()+1)
 		analyser.halfTScore++
 		analyser.tScore = e.WinnerState.Score() + 1
 		analyser.ctScore = e.LoserState.Score()
 	}
-
+	analyser.printScore()
 	analyser.registerRoundEnd(tick)
 
 	isEnd, isHalf := analyser.checkMatchEnd(), analyser.checkMatchHalf()

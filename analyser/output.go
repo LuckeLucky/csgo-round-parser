@@ -48,3 +48,12 @@ func printScoresHalf(half *Half, nHalf int, isCTOnLeft bool) {
 		fmt.Printf("%s|%s\n", format[0], format[1])
 	}
 }
+func (analyser *Analyser) printScore() {
+	ctName := analyser.parser.GameState().TeamCounterTerrorists().ClanName()
+	tName := analyser.parser.GameState().TeamTerrorists().ClanName()
+	if utils.IsWindows() {
+		fmt.Fprintf(color.Output, "%s vs %s  %d : %d\n", color.BlueString(ctName), color.RedString(tName), analyser.ctScore, analyser.tScore)
+	} else {
+		fmt.Printf("%s vs %s  %d : %d\n", color.BlueString(ctName), color.RedString(tName), analyser.ctScore, analyser.tScore)
+	}
+}

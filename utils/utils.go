@@ -5,7 +5,6 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/spf13/viper"
 )
 
@@ -20,12 +19,6 @@ func PrintDebug(text string) {
 	if test {
 		fmt.Print(text + "\n")
 	}
-}
-
-func PrintScores(ctName string, tName string, ctScore int, tScore int) {
-	blue := color.New(color.FgBlue).SprintFunc()
-	red := color.New(color.FgRed).SprintFunc()
-	fmt.Printf("%s vs %s  %d : %d\n", blue(ctName), red(tName), ctScore, tScore)
 }
 
 func Abs(x int) int {
