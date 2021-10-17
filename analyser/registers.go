@@ -36,13 +36,3 @@ func (analyser *Analyser) registerMatchEventHandlers() {
 	analyser.parser.RegisterEventHandler(func(e events.RoundEnd) { analyser.handlerRoundEnd(e) })
 
 }
-
-func (analyser *Analyser) registerAnalyseEventHandlers() {
-	//Round start
-	analyser.parser.RegisterEventHandler(func(e events.RoundStart) { analyser.handlerRoundStartValid() })
-	analyser.parser.RegisterEventHandler(func(e events.MatchStartedChanged) { analyser.handlerRoundStartValid() })
-	//Round ends
-	analyser.parser.RegisterEventHandler(func(e events.RoundEnd) { analyser.handlerRoundEndValid() })
-
-	analyser.parser.RegisterEventHandler(func(e events.Kill) { analyser.handlerKills(e) })
-}

@@ -37,15 +37,8 @@ func main() {
 			fmt.Printf("Analyzing file: %s\n", f.Name())
 			an := analyser.NewAnalyser(f)
 			an.SimpleRun()
-			an.RunAndAnalyse()
 			fmt.Printf("Finished file: %s\n\n", f.Name())
 			f.Close()
-			/*newName := an.GetDemoNameWithDetails()
-			err = os.Rename(path, "analysed-demos/"+newName+".dem")
-			if err != nil {
-				fmt.Printf("error renaming file: %s", err)
-			}*/
-
 			return nil
 		})
 	if err != nil {

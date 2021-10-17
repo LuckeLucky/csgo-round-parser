@@ -3,7 +3,6 @@ package analyser
 import (
 	"fmt"
 
-	"github.com/LuckeLucky/demo-analyser-csgo/utils"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
@@ -31,12 +30,10 @@ func (analyser *Analyser) handlerRoundStart(e interface{}) {
 	switch switchEvents := e.(type) {
 	case events.RoundStart:
 		if switchEvents.TimeLimit != 115 {
-			utils.PrintDebug("1")
 			return
 		}
 	case events.MatchStartedChanged:
 		if !switchEvents.NewIsStarted {
-			utils.PrintDebug("2")
 			return
 		}
 	case events.RoundFreezetimeEnd:
@@ -46,15 +43,12 @@ func (analyser *Analyser) handlerRoundStart(e interface{}) {
 	}
 
 	if !analyser.checkValidRoundStartMoney() {
-		utils.PrintDebug("3")
 		return
 	}
 	if !analyser.checkFreeArmor() {
-		utils.PrintDebug("4")
 		return
 	}
 	if !analyser.checkFirstRoundStartEquipmentValue() {
-		utils.PrintDebug("5")
 		return
 	}
 	analyser.roundStarted = true
@@ -95,35 +89,4 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 			analyser.resetHalfScores()
 		}
 	}
-}
-
-func (analyser *Analyser) handlerRoundStartValid() {
-	tick, err := analyser.getGameTick()
-	if err || len(analyser.rounds) == analyser.roundsPlayed {
-		return
-	}
-
-	if tick != analyser.rounds[analyser.roundsPlayed].startTick {
-		return
-	}
-
-	//first round
-	if analyser.roundsPlayed == 0 {
-		analyser.setPlayers()
-	}
-	analyser.inRound = true
-}
-
-func (analyser *Analyser) handlerRoundEndValid() {
-	tick, err := analyser.getGameTick()
-	if err || len(analyser.rounds) == analyser.roundsPlayed {
-		return
-	}
-
-	if tick != analyser.rounds[analyser.roundsPlayed].endTick {
-		return
-	}
-
-	analyser.roundsPlayed++
-	analyser.inRound = false
 }

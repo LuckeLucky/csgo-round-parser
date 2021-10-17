@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 
-	p_common "github.com/LuckeLucky/demo-analyser-csgo/common"
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
 	"github.com/gogo/protobuf/proto"
 
@@ -41,10 +40,6 @@ type Analyser struct {
 	currentOvertimeStartMoney int
 	overtimeMaxRounds         int
 	freeArmor                 int
-
-	//Vars for a 2nd parse
-	inRound bool
-	players map[uint64]*p_common.Player
 }
 
 func NewAnalyser(demostream io.Reader) *Analyser {
@@ -87,26 +82,4 @@ func (analyser *Analyser) SimpleRun() {
 	analyser.printHalfs()
 	analyser.printMap()
 	fmt.Printf("Rounds played:%d\n", analyser.roundsPlayed)
-}
-
-func (analyser *Analyser) RunAndAnalyse() {
-	analyser.resetParser()
-	analyser.roundsPlayed = 0
-	analyser.players = make(map[uint64]*p_common.Player)
-
-	analyser.registerAnalyseEventHandlers()
-
-	var err error
-
-	for ok := true; ok; ok, err = analyser.parser.ParseNextFrame() {
-		utils.CheckError(err)
-	}
-
-	analyser.printScoreBoard()
-
-}
-
-func (analyser *Analyser) GetDemoNameWithDetails() (name string) {
-	name = fmt.Sprintf("%s_vs_%s_%s", analyser.halfs[0].ctName, analyser.halfs[0].tName, analyser.mapName)
-	return name
 }
