@@ -39,6 +39,10 @@ func (analyser *Analyser) handlerRoundStart(e interface{}) {
 			utils.PrintDebug("2")
 			return
 		}
+	case events.RoundFreezetimeEnd:
+		if analyser.roundStarted {
+			return
+		}
 	}
 
 	if !analyser.checkValidRoundStartMoney() {
