@@ -36,6 +36,7 @@ type Analyser struct {
 
 	//Convars -----------------
 	isMoneySet                bool
+	isOvertimeMoneySet        bool
 	currentStartMoney         int
 	currentOvertimeStartMoney int
 	overtimeMaxRounds         int

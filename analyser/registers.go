@@ -21,6 +21,7 @@ func (analyser *Analyser) registerNetMessageHandlers() {
 			} else if cvar.Name == "mp_overtime_startmoney" {
 				/*sometimes mp_overtime_startmoney is used instead of start_money for overtimes*/
 				analyser.currentOvertimeStartMoney, _ = strconv.Atoi(cvar.Value)
+				analyser.isOvertimeMoneySet = true
 			}
 		}
 	})

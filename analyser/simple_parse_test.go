@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,73 +14,102 @@ func TestSimpleParse(t *testing.T) {
 	defer quiet()
 	utils.ReadConfigFile()
 	f, err := os.Open("../test-demos/Caretos Gaming_vs_Rhyno Esports_de_nuke.dem")
-	assert.Equal(t, err, nil)
+	assert.Equal(t, nil, err)
 
 	a := NewAnalyser(f)
 	a.SimpleRun()
 
-	assert.Equal(t, a.roundsPlayed, 20)
-	assert.Equal(t, len(a.halfs), 2)
+	assert.Equal(t, 20, a.roundsPlayed)
+	assert.Equal(t, 2, len(a.halfs))
 
-	assert.Equal(t, a.halfs[0].halfCtScore, 4)
-	assert.Equal(t, a.halfs[0].halfTScore, 11)
+	assert.Equal(t, 4, a.halfs[0].halfCtScore)
+	assert.Equal(t, 11, a.halfs[0].halfTScore)
 
-	assert.Equal(t, a.halfs[1].halfCtScore, 5)
-	assert.Equal(t, a.halfs[1].halfTScore, 0)
+	assert.Equal(t, 5, a.halfs[1].halfCtScore)
+	assert.Equal(t, 0, a.halfs[1].halfTScore)
 
 	f, err = os.Open("../test-demos/SAW_vs_Galaxy Racer_de_dust2.dem")
-	assert.Equal(t, err, nil)
+	assert.Equal(t, nil, err)
 
 	a = nil
 	a = NewAnalyser(f)
 	a.SimpleRun()
 
-	assert.Equal(t, a.roundsPlayed, 22)
-	assert.Equal(t, len(a.halfs), 2)
+	assert.Equal(t, 22, a.roundsPlayed)
+	assert.Equal(t, 2, len(a.halfs))
 
-	assert.Equal(t, a.halfs[0].halfCtScore, 13)
-	assert.Equal(t, a.halfs[0].halfTScore, 2)
+	assert.Equal(t, 13, a.halfs[0].halfCtScore)
+	assert.Equal(t, 2, a.halfs[0].halfTScore)
 
-	assert.Equal(t, a.halfs[1].halfCtScore, 4)
-	assert.Equal(t, a.halfs[1].halfTScore, 3)
+	assert.Equal(t, 4, a.halfs[1].halfCtScore)
+	assert.Equal(t, 3, a.halfs[1].halfTScore)
 
 	f, err = os.Open("../test-demos/SAW_vs_DBL PONEY_de_overpass.dem")
-	assert.Equal(t, err, nil)
+	assert.Equal(t, nil, err)
 
 	a = nil
 	a = NewAnalyser(f)
 	a.SimpleRun()
 
-	assert.Equal(t, a.roundsPlayed, 25)
-	assert.Equal(t, len(a.halfs), 2)
+	assert.Equal(t, 25, a.roundsPlayed)
+	assert.Equal(t, 2, len(a.halfs))
 
-	assert.Equal(t, a.halfs[0].halfCtScore, 6)
-	assert.Equal(t, a.halfs[0].halfTScore, 9)
+	assert.Equal(t, 6, a.halfs[0].halfCtScore)
+	assert.Equal(t, 9, a.halfs[0].halfTScore)
 
-	assert.Equal(t, a.halfs[1].halfCtScore, 7)
-	assert.Equal(t, a.halfs[1].halfTScore, 3)
+	assert.Equal(t, 7, a.halfs[1].halfCtScore)
+	assert.Equal(t, 3, a.halfs[1].halfTScore)
 
+	//no start money set
 	f, err = os.Open("../test-demos/SAW_vs_Galaxy Racer_de_inferno.dem")
-	assert.Equal(t, err, nil)
+	assert.Equal(t, nil, err)
 
 	a = nil
 	a = NewAnalyser(f)
 	a.SimpleRun()
 
-	assert.Equal(t, a.roundsPlayed, 36)
-	assert.Equal(t, len(a.halfs), 4)
+	assert.Equal(t, 36, a.roundsPlayed)
+	assert.Equal(t, 4, len(a.halfs))
 
-	assert.Equal(t, a.halfs[0].halfCtScore, 5)
-	assert.Equal(t, a.halfs[0].halfTScore, 10)
+	assert.Equal(t, 5, a.halfs[0].halfCtScore)
+	assert.Equal(t, 10, a.halfs[0].halfTScore)
 
-	assert.Equal(t, a.halfs[1].halfCtScore, 5)
-	assert.Equal(t, a.halfs[1].halfTScore, 10)
+	assert.Equal(t, 5, a.halfs[1].halfCtScore)
+	assert.Equal(t, 10, a.halfs[1].halfTScore)
 
-	assert.Equal(t, a.halfs[2].halfCtScore, 2)
-	assert.Equal(t, a.halfs[2].halfTScore, 1)
+	assert.Equal(t, 2, a.halfs[2].halfCtScore)
+	assert.Equal(t, 1, a.halfs[2].halfTScore)
 
-	assert.Equal(t, a.halfs[3].halfCtScore, 1)
-	assert.Equal(t, a.halfs[3].halfTScore, 2)
+	assert.Equal(t, 1, a.halfs[3].halfCtScore)
+	assert.Equal(t, 2, a.halfs[3].halfTScore)
+
+	// overtime 16000
+	f, err = os.Open("../test-demos/unique-vs-nexus-m3-dust2.dem")
+	assert.Equal(t, nil, err)
+
+	viper.Set("overtimeStartMoney", 16000)
+	a = nil
+	a = NewAnalyser(f)
+	a.SimpleRun()
+
+	assert.Equal(t, 36, a.roundsPlayed)
+	assert.Equal(t, 4, len(a.halfs))
+
+	assert.Equal(t, 7, a.halfs[0].halfCtScore)
+	assert.Equal(t, 8, a.halfs[0].halfTScore)
+
+	assert.Equal(t, 7, a.halfs[1].halfCtScore)
+	assert.Equal(t, 8, a.halfs[1].halfTScore)
+
+	assert.Equal(t, 2, a.halfs[2].halfCtScore)
+	assert.Equal(t, 1, a.halfs[2].halfTScore)
+
+	assert.Equal(t, 3, a.halfs[3].halfCtScore)
+	assert.Equal(t, 0, a.halfs[3].halfTScore)
+
+	assert.Equal(t, 800, a.currentStartMoney)
+	assert.Equal(t, 16000, a.currentOvertimeStartMoney)
+
 }
 
 func quiet() func() {

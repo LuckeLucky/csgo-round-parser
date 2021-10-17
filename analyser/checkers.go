@@ -20,7 +20,10 @@ func (analyser *Analyser) checkValidRoundStartMoney() bool {
 	if analyser.roundsPlayed < 30 {
 		return analyser.currentStartMoney == viper.GetInt("regularStartMoney")
 	} else {
-		return analyser.currentStartMoney == viper.GetInt("overtimeStartMoney") || analyser.currentOvertimeStartMoney == viper.GetInt("overtimeStartMoney")
+		if !analyser.isOvertimeMoneySet {
+			return true
+		}
+		return analyser.currentOvertimeStartMoney == viper.GetInt("overtimeStartMoney")
 	}
 
 }
