@@ -1,7 +1,6 @@
 package analyser
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 
@@ -15,8 +14,6 @@ import (
 type Analyser struct {
 	parser demoinfocs.Parser
 
-	//buf and cfg will allow for a secon parse
-	buf     *bytes.Buffer
 	cfg     demoinfocs.ParserConfig
 	mapName string
 
@@ -44,8 +41,6 @@ type Analyser struct {
 
 func NewAnalyser(demostream io.Reader) *Analyser {
 	analyser := &Analyser{}
-	analyser.buf = &bytes.Buffer{}
-	demostream = io.TeeReader(demostream, analyser.buf)
 	analyser.cfg = demoinfocs.DefaultParserConfig
 	analyser.cfg.AdditionalNetMessageCreators = map[int]demoinfocs.NetMessageCreator{
 		6: func() proto.Message {
