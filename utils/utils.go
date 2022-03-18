@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"runtime"
 	"strings"
 
@@ -11,13 +10,6 @@ import (
 func CheckError(err error) {
 	if err != nil {
 		panic(err)
-	}
-}
-
-func PrintDebug(text string) {
-	test := viper.GetBool("debug")
-	if test {
-		fmt.Print(text + "\n")
 	}
 }
 

@@ -2,5 +2,5 @@
     "regularStartMoney" : 800,
     "overtimeStartMoney" : 13000,
 
-    "debug": false
+    "debug": true
 }

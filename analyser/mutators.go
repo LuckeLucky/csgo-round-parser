@@ -14,7 +14,3 @@ func (analyser *Analyser) resetHalfScores() {
 func (analyser *Analyser) switchSideScores() {
 	analyser.ctScore, analyser.tScore = analyser.tScore, analyser.ctScore
 }
-
-func (analyser *Analyser) setMatchEnded() {
-	analyser.matchEnded = true
-}

@@ -16,5 +16,8 @@ func (analyser *Analyser) setRound(tick int) {
 	analyser.roundsPlayed++
 
 	analyser.currentRound = nil
+}
 
+func (analyser *Analyser) setMatchEnded() {
+	analyser.matchEnded = true
 }
