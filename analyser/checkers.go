@@ -44,7 +44,7 @@ func (analyser *Analyser) checkMatchHalf() bool {
 	return false
 }
 
-func (analyser *Analyser) checkMatchEnd() bool {
+func (analyser *Analyser) checkMatchFinished() bool {
 	ctScore, tScore := analyser.ctScore, analyser.tScore
 	roundsInOvertime := ctScore + tScore - MAX_ROUNDS_REGULAR
 
@@ -60,11 +60,16 @@ func (analyser *Analyser) checkMatchEnd() bool {
 	return false
 }
 
+func (analyser *Analyser) checkMatchEnded() bool {
+	return analyser.matchEnded
+}
+
 func (analyser *Analyser) checkFreeArmor() bool {
 	return analyser.freeArmor == 0
 }
 
 func (analyser *Analyser) checkFirstRoundStartEquipmentValue() bool {
+	//T and CT start with 1k money in first Round
 	if analyser.roundsPlayed > 0 {
 		return true
 	}
