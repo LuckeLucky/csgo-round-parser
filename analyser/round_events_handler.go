@@ -26,6 +26,11 @@ func (analyser *Analyser) handlerRoundStart(e interface{}) {
 
 		return
 	}
+
+	if analyser.checkMatchEnded() {
+		return
+	}
+
 	// Rounds Time Limit equal to 1m55s == 115s
 	switch switchEvents := e.(type) {
 	case events.RoundStart:
@@ -81,9 +86,7 @@ func (analyser *Analyser) handlerRoundEnd(e interface{}) {
 	case events.RoundEndOfficial:
 		//RondEndOfficial is only dispatched after RoundEnd
 		//at this point if RoundEnd was dispatched RondEndOfficial will not be processed because roundStarted is false
-
 		//Ct won the round
-		/*********CHANGE THIS CODE TEAM SIDE SWITCH*/
 		if analyser.parser.GameState().TeamCounterTerrorists().Score() > analyser.ctScore {
 			analyser.halfCtScore++
 			analyser.ctScore = analyser.parser.GameState().TeamCounterTerrorists().Score()
@@ -98,11 +101,12 @@ func (analyser *Analyser) handlerRoundEnd(e interface{}) {
 	analyser.printScore()
 	analyser.setRound(tick)
 
-	isEnd, isHalf := analyser.checkMatchEnd(), analyser.checkMatchHalf()
+	isEnd, isHalf := analyser.checkMatchFinished(), analyser.checkMatchHalf()
 	if isEnd || isHalf {
 		analyser.setNewHalf()
 		if isEnd {
 			fmt.Println("---Finish---")
+			analyser.setMatchEnded()
 		} else {
 			fmt.Println("---HALF---")
 			analyser.resetHalfScores()

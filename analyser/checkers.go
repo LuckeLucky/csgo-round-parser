@@ -44,7 +44,7 @@ func (analyser *Analyser) checkMatchHalf() bool {
 	return false
 }
 
-func (analyser *Analyser) checkMatchEnd() bool {
+func (analyser *Analyser) checkMatchFinished() bool {
 	ctScore, tScore := analyser.ctScore, analyser.tScore
 	roundsInOvertime := ctScore + tScore - MAX_ROUNDS_REGULAR
 
@@ -58,6 +58,10 @@ func (analyser *Analyser) checkMatchEnd() bool {
 	}
 
 	return false
+}
+
+func (analyser *Analyser) checkMatchEnded() bool {
+	return analyser.matchEnded
 }
 
 func (analyser *Analyser) checkFreeArmor() bool {

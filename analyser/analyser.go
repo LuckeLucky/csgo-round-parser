@@ -23,6 +23,8 @@ type Analyser struct {
 	halfs        []*Half
 	roundStarted bool
 
+	matchEnded bool
+
 	//Current ScoreBoard scores
 	ctScore int
 	tScore  int

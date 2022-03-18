@@ -3,6 +3,7 @@ package analyser
 func (analyser *Analyser) setDefault() {
 	analyser.overtimeMaxRounds = 6
 	analyser.freeArmor = 0
+	analyser.matchEnded = false
 }
 
 func (analyser *Analyser) resetHalfScores() {
@@ -12,4 +13,8 @@ func (analyser *Analyser) resetHalfScores() {
 
 func (analyser *Analyser) switchSideScores() {
 	analyser.ctScore, analyser.tScore = analyser.tScore, analyser.ctScore
+}
+
+func (analyser *Analyser) setMatchEnded() {
+	analyser.matchEnded = true
 }
