@@ -65,6 +65,7 @@ func (analyser *Analyser) checkFreeArmor() bool {
 }
 
 func (analyser *Analyser) checkFirstRoundStartEquipmentValue() bool {
+	//T and CT start with 1k money in first Round
 	if analyser.roundsPlayed > 0 {
 		return true
 	}

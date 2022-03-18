@@ -34,5 +34,8 @@ func (analyser *Analyser) registerMatchEventHandlers() {
 	analyser.parser.RegisterEventHandler(func(e events.RoundFreezetimeEnd) { analyser.handlerRoundStart(e) })
 	//Round ends
 	analyser.parser.RegisterEventHandler(func(e events.RoundEnd) { analyser.handlerRoundEnd(e) })
+	analyser.parser.RegisterEventHandler(func(e events.RoundEndOfficial) { analyser.handlerRoundEnd(e) })
 
+	//Handle side switch
+	analyser.parser.RegisterEventHandler(func(e events.TeamSideSwitch) { analyser.handlerSideSwitch() })
 }

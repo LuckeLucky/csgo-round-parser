@@ -56,7 +56,7 @@ func (analyser *Analyser) handlerRoundStart(e interface{}) {
 
 }
 
-func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
+func (analyser *Analyser) handlerRoundEnd(e interface{}) {
 	tick, err := analyser.getGameTick()
 	if err {
 		return
@@ -66,15 +66,34 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 		return
 	}
 
-	switch e.Winner {
-	case common.TeamCounterTerrorists:
-		analyser.halfCtScore++
-		analyser.ctScore = e.WinnerState.Score() + 1
-		analyser.tScore = e.LoserState.Score()
-	case common.TeamTerrorists:
-		analyser.halfTScore++
-		analyser.tScore = e.WinnerState.Score() + 1
-		analyser.ctScore = e.LoserState.Score()
+	switch switchEvents := e.(type) {
+	case events.RoundEnd:
+		switch switchEvents.Winner {
+		case common.TeamCounterTerrorists:
+			analyser.halfCtScore++
+			analyser.ctScore = switchEvents.WinnerState.Score() + 1
+			analyser.tScore = switchEvents.LoserState.Score()
+		case common.TeamTerrorists:
+			analyser.halfTScore++
+			analyser.tScore = switchEvents.WinnerState.Score() + 1
+			analyser.ctScore = switchEvents.LoserState.Score()
+		}
+	case events.RoundEndOfficial:
+		//RondEndOfficial is only dispatched after RoundEnd
+		//at this point if RoundEnd was dispatched RondEndOfficial will not be processed because roundStarted is false
+
+		//Ct won the round
+		/*********CHANGE THIS CODE TEAM SIDE SWITCH*/
+		if analyser.parser.GameState().TeamCounterTerrorists().Score() > analyser.ctScore {
+			analyser.halfCtScore++
+			analyser.ctScore = analyser.parser.GameState().TeamCounterTerrorists().Score()
+			analyser.tScore = analyser.parser.GameState().TeamTerrorists().Score()
+			//t won the round
+		} else if analyser.parser.GameState().TeamTerrorists().Score() > analyser.tScore {
+			analyser.halfTScore++
+			analyser.tScore = analyser.parser.GameState().TeamTerrorists().Score()
+			analyser.ctScore = analyser.parser.GameState().TeamCounterTerrorists().Score()
+		}
 	}
 	analyser.printScore()
 	analyser.setRound(tick)
@@ -89,4 +108,9 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 			analyser.resetHalfScores()
 		}
 	}
+}
+
+func (analyser *Analyser) handlerSideSwitch() {
+	//Switch our registed sideScores
+	analyser.switchSideScores()
 }
