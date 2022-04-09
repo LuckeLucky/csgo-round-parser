@@ -1,8 +1,6 @@
 package analyser
 
 import (
-	"fmt"
-
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
@@ -16,14 +14,14 @@ type Half struct {
 }
 
 type Round struct {
-	startTick int
-	endTick   int
+	startTick       int
+	endTick         int
+	endOfficialTick int
 }
 
 func (analyser *Analyser) handlerRoundStart(e interface{}) {
 	tick, err := analyser.getGameTick()
 	if err {
-
 		return
 	}
 
@@ -61,7 +59,7 @@ func (analyser *Analyser) handlerRoundStart(e interface{}) {
 
 }
 
-func (analyser *Analyser) handlerRoundEnd(e interface{}) {
+func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 	tick, err := analyser.getGameTick()
 	if err {
 		return
@@ -71,19 +69,30 @@ func (analyser *Analyser) handlerRoundEnd(e interface{}) {
 		return
 	}
 
-	switch switchEvents := e.(type) {
-	case events.RoundEnd:
-		switch switchEvents.Winner {
-		case common.TeamCounterTerrorists:
-			analyser.halfCtScore++
-			analyser.ctScore = switchEvents.WinnerState.Score() + 1
-			analyser.tScore = switchEvents.LoserState.Score()
-		case common.TeamTerrorists:
-			analyser.halfTScore++
-			analyser.tScore = switchEvents.WinnerState.Score() + 1
-			analyser.ctScore = switchEvents.LoserState.Score()
-		}
-	case events.RoundEndOfficial:
+	switch e.Winner {
+	case common.TeamCounterTerrorists:
+		analyser.halfCtScore++
+		analyser.ctScore = e.WinnerState.Score() + 1
+		analyser.tScore = e.LoserState.Score()
+	case common.TeamTerrorists:
+		analyser.halfTScore++
+		analyser.tScore = e.WinnerState.Score() + 1
+		analyser.ctScore = e.LoserState.Score()
+	}
+
+	analyser.printScore()
+	analyser.setRoundEnd(tick)
+	analyser.checkForMatchHalfOrEnd()
+}
+
+func (analyser *Analyser) handlerRoundEndOfficial(e events.RoundEndOfficial) {
+	tick, err := analyser.getGameTick()
+	if err {
+		return
+	}
+
+	//Round started and RoundEnd was not dispatched
+	if analyser.roundStarted && analyser.currentRound.endTick == 0 {
 		//RondEndOfficial is only dispatched after RoundEnd
 		//at this point if RoundEnd was dispatched RondEndOfficial will not be processed because roundStarted is false
 		//Ct won the round
@@ -97,20 +106,15 @@ func (analyser *Analyser) handlerRoundEnd(e interface{}) {
 			analyser.tScore = analyser.parser.GameState().TeamTerrorists().Score()
 			analyser.ctScore = analyser.parser.GameState().TeamCounterTerrorists().Score()
 		}
+		analyser.printScore()
+		analyser.setRoundEndOfficial(tick)
+		analyser.checkForMatchHalfOrEnd()
+		return
 	}
-	analyser.printScore()
-	analyser.setRound(tick)
 
-	isEnd, isHalf := analyser.checkMatchFinished(), analyser.checkMatchHalf()
-	if isEnd || isHalf {
-		analyser.setNewHalf()
-		if isEnd {
-			fmt.Println("---Finish---")
-			analyser.setMatchEnded()
-		} else {
-			fmt.Println("---HALF---")
-			analyser.resetHalfScores()
-		}
+	//RoundEnd was dispatched so we just store the tick of RoundEndOfficial
+	if !analyser.roundStarted && analyser.previousRound.endTick != 0 && analyser.previousRound.endOfficialTick == 0 {
+		analyser.previousRound.endOfficialTick = tick
 	}
 }
 

@@ -32,6 +32,18 @@ func (analyser *Analyser) printMap() {
 	}
 }
 
+func (analyser *Analyser) printFinish() {
+	fmt.Println("---Finish---")
+}
+
+func (analyser *Analyser) printHalf() {
+	fmt.Println("---HALF---")
+}
+
+func (analyser *Analyser) printRoundsPlayed() {
+	fmt.Printf("Rounds played:%d\n", analyser.roundsPlayed)
+}
+
 func printScoresHalf(half *Half, nHalf int, isCTOnLeft bool) {
 	ctScore := utils.PadSpaceEnd(strconv.Itoa(half.halfCtScore), 6)
 	tScore := utils.PadSpaceEnd(strconv.Itoa(half.halfTScore), 6)

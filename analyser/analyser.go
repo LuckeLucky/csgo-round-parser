@@ -1,7 +1,6 @@
 package analyser
 
 import (
-	"fmt"
 	"io"
 
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
@@ -17,10 +16,12 @@ type Analyser struct {
 	cfg     demoinfocs.ParserConfig
 	mapName string
 
-	rounds       []*Round
-	currentRound *Round
-	roundsPlayed int
-	halfs        []*Half
+	rounds        []*Round
+	currentRound  *Round
+	previousRound *Round
+	roundsPlayed  int
+	halfs         []*Half
+
 	roundStarted bool
 
 	matchEnded bool
@@ -78,5 +79,5 @@ func (analyser *Analyser) SimpleRun() {
 
 	analyser.printHalfs()
 	analyser.printMap()
-	fmt.Printf("Rounds played:%d\n", analyser.roundsPlayed)
+	analyser.printRoundsPlayed()
 }

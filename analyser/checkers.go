@@ -78,3 +78,17 @@ func (analyser *Analyser) checkFirstRoundStartEquipmentValue() bool {
 	return analyser.parser.GameState().TeamCounterTerrorists().RoundStartEquipmentValue() == 1000 &&
 		analyser.parser.GameState().TeamTerrorists().RoundStartEquipmentValue() == 1000
 }
+
+func (analyser *Analyser) checkForMatchHalfOrEnd() {
+	isEnd, isHalf := analyser.checkMatchFinished(), analyser.checkMatchHalf()
+	if isEnd || isHalf {
+		analyser.setNewHalf()
+		if isEnd {
+			analyser.setMatchEnded()
+			analyser.printFinish()
+		} else {
+			analyser.resetHalfScores()
+			analyser.printHalf()
+		}
+	}
+}

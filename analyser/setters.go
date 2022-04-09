@@ -9,15 +9,25 @@ func (analyser *Analyser) setNewHalf() {
 	})
 }
 
-func (analyser *Analyser) setRound(tick int) {
+func (analyser *Analyser) setRoundEnd(tick int) {
 	analyser.roundStarted = false
 	analyser.currentRound.endTick = tick
-	analyser.rounds = append(analyser.rounds, analyser.currentRound)
-	analyser.roundsPlayed++
+	analyser.setRoundFinish()
+}
 
-	analyser.currentRound = nil
+func (analyser *Analyser) setRoundEndOfficial(tick int) {
+	analyser.roundStarted = false
+	analyser.currentRound.endOfficialTick = tick
+	analyser.setRoundFinish()
 }
 
 func (analyser *Analyser) setMatchEnded() {
 	analyser.matchEnded = true
+}
+
+func (analyser *Analyser) setRoundFinish() {
+	analyser.rounds = append(analyser.rounds, analyser.currentRound)
+	analyser.roundsPlayed++
+	analyser.previousRound = analyser.currentRound
+	analyser.currentRound = nil
 }
