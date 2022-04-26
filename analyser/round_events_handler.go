@@ -19,6 +19,12 @@ type Round struct {
 	endOfficialTick int
 }
 
+type LiquipediaPlayer struct {
+	Page          string
+	SteamID       uint64
+	CrosshairCode string
+}
+
 func (analyser *Analyser) handlerRoundStart(e interface{}) {
 	tick, err := analyser.getGameTick()
 	if err {
@@ -67,6 +73,20 @@ func (analyser *Analyser) handlerRoundEnd(e events.RoundEnd) {
 
 	if !analyser.roundStarted {
 		return
+	}
+
+	if analyser.roundsPlayed == 0 {
+		printTableHeader(analyser.parser.GameState().TeamTerrorists().ClanName() + "_vs_" + analyser.parser.GameState().TeamCounterTerrorists().ClanName() + "__" + analyser.mapName)
+		printHeaders()
+		for _, p := range analyser.parser.GameState().Participants().Playing() {
+			analyser.liquipediaPlayers = append(analyser.liquipediaPlayers, LiquipediaPlayer{
+				Page:          p.Name,
+				SteamID:       p.SteamID64,
+				CrosshairCode: p.CrosshairCode(),
+			})
+			printRow(p.Name, p.SteamID64, p.CrosshairCode())
+		}
+		printEndTable()
 	}
 
 	switch e.Winner {

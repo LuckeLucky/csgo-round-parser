@@ -1,7 +1,9 @@
 package analyser
 
 import (
+	"encoding/json"
 	"io"
+	"io/ioutil"
 
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
 	"github.com/gogo/protobuf/proto"
@@ -10,6 +12,12 @@ import (
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/msg"
 )
 
+type Match struct {
+	Link    string
+	Title   string
+	Date    string
+	Players []LiquipediaPlayer
+}
 type Analyser struct {
 	parser demoinfocs.Parser
 
@@ -40,6 +48,8 @@ type Analyser struct {
 	currentOvertimeStartMoney int
 	overtimeMaxRounds         int
 	freeArmor                 int
+
+	liquipediaPlayers []LiquipediaPlayer
 }
 
 func NewAnalyser(demostream io.Reader) *Analyser {
@@ -80,4 +90,19 @@ func (analyser *Analyser) SimpleRun() {
 	analyser.printHalfs()
 	analyser.printMap()
 	analyser.printRoundsPlayed()
+
+	data := Match{
+		Players: analyser.liquipediaPlayers,
+	}
+
+	file, _ := json.MarshalIndent(data, "", "    ")
+
+	ctName := "cts"
+	tName := "ts"
+	if len(analyser.halfs) > 0 {
+		ctName = analyser.halfs[0].ctName
+		tName = analyser.halfs[0].tName
+	}
+
+	_ = ioutil.WriteFile("jsons/"+ctName+"_vs_"+tName+"_at_"+analyser.mapName+".json", file, 0644)
 }
