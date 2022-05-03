@@ -15,6 +15,7 @@ func init() {
 }
 
 func main() {
+	fmt.Println(os.Args[0])
 	err := filepath.Walk("demos/",
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
@@ -44,4 +45,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Scanf("oi")
 }
