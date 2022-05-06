@@ -10,8 +10,6 @@ import (
 )
 
 func main() {
-	fmt.Println(os.Args[0])
-
 	f, err := os.Open(os.Args[1])
 	utils.CheckError(err)
 	defer f.Close()
