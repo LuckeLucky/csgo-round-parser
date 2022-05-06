@@ -72,8 +72,9 @@ func (analyser *Analyser) SimpleRun() {
 	analyser.registerNetMessageHandlers()
 	analyser.registerMatchEventHandlers()
 
-	var err error
-	for ok := true; ok; ok, err = analyser.parser.ParseNextFrame() {
+	// Parse to end
+	err := analyser.parser.ParseToEnd()
+	if err != demoinfocs.ErrUnexpectedEndOfDemo {
 		utils.CheckError(err)
 	}
 
