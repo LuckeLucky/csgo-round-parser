@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
-	"github.com/fatih/color"
+	"github.com/pterm/pterm"
 )
 
 func (analyser *Analyser) printHalfs() {
@@ -25,11 +25,7 @@ func (analyser *Analyser) printHalfs() {
 }
 
 func (analyser *Analyser) printMap() {
-	if utils.IsWindows() {
-		fmt.Fprintf(color.Output, "Map:%s\n", color.YellowString(analyser.mapName))
-	} else {
-		fmt.Printf("Map:%s\n", color.YellowString(analyser.mapName))
-	}
+	pterm.Println("Map: " + pterm.Yellow(analyser.mapName))
 }
 
 func (analyser *Analyser) printFinish() {
@@ -49,23 +45,15 @@ func printScoresHalf(half *Half, nHalf int, isCTOnLeft bool) {
 	tScore := utils.PadSpaceEnd(strconv.Itoa(half.halfTScore), 6)
 
 	halfPrint := utils.PadSpaceEnd(strconv.Itoa(nHalf), 6)
-	format := []string{color.RedString(tScore), color.BlueString(ctScore)}
+	format := []string{pterm.Red(tScore), pterm.Blue(ctScore)}
 	if isCTOnLeft {
 		format[0], format[1] = format[1], format[0]
 	}
 	fmt.Printf("%s|", halfPrint)
-	if utils.IsWindows() {
-		fmt.Fprintf(color.Output, "%s|%s\n", format[0], format[1])
-	} else {
-		fmt.Printf("%s|%s\n", format[0], format[1])
-	}
+	pterm.Println(format[0] + "|" + format[1])
 }
 func (analyser *Analyser) printScore() {
 	ctName := analyser.parser.GameState().TeamCounterTerrorists().ClanName()
 	tName := analyser.parser.GameState().TeamTerrorists().ClanName()
-	if utils.IsWindows() {
-		fmt.Fprintf(color.Output, "%s vs %s  %d : %d\n", color.BlueString(ctName), color.RedString(tName), analyser.ctScore, analyser.tScore)
-	} else {
-		fmt.Printf("%s vs %s  %d : %d\n", color.BlueString(ctName), color.RedString(tName), analyser.ctScore, analyser.tScore)
-	}
+	pterm.Printf("%s vs %s  %d : %d\n", pterm.Blue(ctName), pterm.Red(tName), analyser.ctScore, analyser.tScore)
 }
