@@ -13,8 +13,9 @@ import (
 type Analyser struct {
 	parser demoinfocs.Parser
 
-	cfg     demoinfocs.ParserConfig
-	mapName string
+	cfg           demoinfocs.ParserConfig
+	convarsConfig map[string]int
+	mapName       string
 
 	rounds        []*Round
 	currentRound  *Round

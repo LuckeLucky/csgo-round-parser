@@ -3,47 +3,25 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/LuckeLucky/demo-analyser-csgo/analyser"
 
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
 )
 
-func init() {
-	utils.ReadConfigFile()
-}
-
 func main() {
 	fmt.Println(os.Args[0])
-	err := filepath.Walk("demos/",
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
 
-			if info.IsDir() {
-				return nil
-			}
+	f, err := os.Open(os.Args[1])
+	utils.CheckError(err)
+	defer f.Close()
 
-			if filepath.Ext(path) != ".dem" {
-				fmt.Println("Ignoring file: " + path)
-				return nil
-			}
+	fmt.Printf("Analyzing file: %s\n", f.Name())
+	an := analyser.NewAnalyser(f)
+	an.SetDefaultConvarConfig()
+	an.SimpleRun()
+	fmt.Printf("Finished file: %s\n\n", f.Name())
+	f.Close()
 
-			f, err := os.Open(path)
-			utils.CheckError(err)
-			defer f.Close()
-
-			fmt.Printf("Analyzing file: %s\n", f.Name())
-			an := analyser.NewAnalyser(f)
-			an.SimpleRun()
-			fmt.Printf("Finished file: %s\n\n", f.Name())
-			f.Close()
-			return nil
-		})
-	if err != nil {
-		panic(err)
-	}
 	fmt.Scanf("oi")
 }

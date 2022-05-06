@@ -2,7 +2,6 @@ package analyser
 
 import (
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
-	"github.com/spf13/viper"
 )
 
 const (
@@ -18,12 +17,12 @@ func (analyser *Analyser) checkValidRoundStartMoney() bool {
 
 	// between 0 - 30 rounds start money is 800
 	if analyser.roundsPlayed < 30 {
-		return analyser.currentStartMoney == viper.GetInt("regularStartMoney")
+		return analyser.currentStartMoney == analyser.convarsConfig["regularStartMoney"]
 	} else {
 		if !analyser.isOvertimeMoneySet {
 			return true
 		}
-		return analyser.currentOvertimeStartMoney == viper.GetInt("overtimeStartMoney")
+		return analyser.currentOvertimeStartMoney == analyser.convarsConfig["overtimeStartMoney"]
 	}
 
 }
