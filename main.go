@@ -17,7 +17,7 @@ func main() {
 	fmt.Printf("Analyzing file: %s\n", f.Name())
 	an := analyser.NewAnalyser(f)
 	an.SetDefaultConvarConfig()
-	an.SimpleRun()
+	an.ParseToEnd()
 	fmt.Printf("Finished file: %s\n\n", f.Name())
 	f.Close()
 

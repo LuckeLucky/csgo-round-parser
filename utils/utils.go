@@ -1,12 +1,16 @@
 package utils
 
 import (
+	"fmt"
 	"runtime"
 	"strings"
 )
 
-func CheckError(err error) {
+func CheckError(err error, where ...string) {
 	if err != nil {
+		if len(where) > 0 {
+			fmt.Println("Error detected in: " + where[0])
+		}
 		panic(err)
 	}
 }

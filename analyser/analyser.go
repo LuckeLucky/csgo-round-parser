@@ -66,7 +66,7 @@ func (analyser *Analyser) handleHeader() {
 	analyser.mapName = header.MapName
 }
 
-func (analyser *Analyser) SimpleRun() {
+func (analyser *Analyser) ParsePerFrame() {
 	analyser.handleHeader()
 	analyser.setDefault()
 
@@ -75,7 +75,25 @@ func (analyser *Analyser) SimpleRun() {
 
 	var err error
 	for ok := true; ok; ok, err = analyser.parser.ParseNextFrame() {
-		utils.CheckError(err)
+		utils.CheckError(err, "ParseNextFrame")
+	}
+
+	analyser.printHalfs()
+	analyser.printMap()
+	analyser.printRoundsPlayed()
+}
+
+func (analyser *Analyser) ParseToEnd() {
+	analyser.handleHeader()
+	analyser.setDefault()
+
+	analyser.registerNetMessageHandlers()
+	analyser.registerMatchEventHandlers()
+
+	// Parse to end
+	err := analyser.parser.ParseToEnd()
+	if err != demoinfocs.ErrUnexpectedEndOfDemo {
+		utils.CheckError(err, "ParseToEnd")
 	}
 
 	analyser.printHalfs()

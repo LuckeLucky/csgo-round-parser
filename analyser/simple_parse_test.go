@@ -13,7 +13,7 @@ func TestSimpleParse(t *testing.T) {
 	assert.Equal(t, nil, err)
 
 	a := NewAnalyser(f)
-	a.SimpleRun()
+	a.ParsePerFrame()
 
 	assert.Equal(t, 22, a.roundsPlayed)
 	assert.Equal(t, 2, len(a.halfs))
