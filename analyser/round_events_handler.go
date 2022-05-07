@@ -113,7 +113,7 @@ func (analyser *Analyser) handlerRoundEndOfficial(e events.RoundEndOfficial) {
 	}
 
 	//RoundEnd was dispatched so we just store the tick of RoundEndOfficial
-	if !analyser.roundStarted && analyser.previousRound.endTick != 0 && analyser.previousRound.endOfficialTick == 0 {
+	if !analyser.roundStarted && analyser.previousRound != nil && analyser.previousRound.endTick != 0 && analyser.previousRound.endOfficialTick == 0 {
 		analyser.previousRound.endOfficialTick = tick
 	}
 }
