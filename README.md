@@ -12,8 +12,8 @@ Build parser to parse a single .dem file:
 # Command-line arguments
 
 | Command | Value | Default
-| -rM | 800 | 800 is the default regular phase start money
-| -otM | 16000 | 16000 is the default overtime start money
+| -rM | 800 | 800 is the default regular phase start money |
+| -otM | 16000 | 16000 is the default overtime start money |
 
 Example usage:
 ```sh
