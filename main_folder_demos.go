@@ -1,5 +1,5 @@
-//go:build !single_parser
-// +build !single_parser
+//go:build !single
+// +build !single
 
 package main
 

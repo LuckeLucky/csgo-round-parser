@@ -11,8 +11,6 @@ import (
 )
 
 type Analyser struct {
-	convarsConfig map[string]int
-
 	parser demoinfocs.Parser
 
 	cfg     demoinfocs.ParserConfig

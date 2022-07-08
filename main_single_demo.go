@@ -1,5 +1,5 @@
-//go:build single_parser
-// +build single_parser
+//go:build single
+// +build single
 
 package main
 
@@ -18,7 +18,6 @@ func readDemos() {
 
 	fmt.Printf("Analyzing file: %s\n", f.Name())
 	an := analyser.NewAnalyser(f)
-	an.SetDefaultConvarConfig()
 	an.FirstParse()
 	fmt.Printf("Finished file: %s\n\n", f.Name())
 	f.Close()

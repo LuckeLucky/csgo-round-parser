@@ -1,6 +1,7 @@
 package analyser
 
 import (
+	"github.com/LuckeLucky/demo-analyser-csgo/global"
 	"github.com/LuckeLucky/demo-analyser-csgo/utils"
 )
 
@@ -17,12 +18,13 @@ func (analyser *Analyser) checkValidRoundStartMoney() bool {
 
 	// between 0 - 30 rounds start money is 800
 	if analyser.roundsPlayed < 30 {
-		return analyser.currentStartMoney == analyser.convarsConfig["regularStartMoney"]
+		return analyser.currentStartMoney == global.RegularStartMoney
 	} else {
+		// when overtime money isnt set we can't say if there is a valid ot start moneys
 		if !analyser.isOvertimeMoneySet {
 			return true
 		}
-		return analyser.currentOvertimeStartMoney == analyser.convarsConfig["overtimeStartMoney"]
+		return analyser.currentOvertimeStartMoney == global.OvertimeStartMoney
 	}
 
 }
