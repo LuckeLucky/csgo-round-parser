@@ -11,6 +11,8 @@ import (
 )
 
 type Analyser struct {
+	convarsConfig map[string]int
+
 	parser demoinfocs.Parser
 
 	cfg     demoinfocs.ParserConfig
@@ -65,7 +67,8 @@ func (analyser *Analyser) handleHeader() {
 	analyser.mapName = header.MapName
 }
 
-func (analyser *Analyser) SimpleRun() {
+// Used to gather information about RoundStart..End and team scores
+func (analyser *Analyser) FirstParse() {
 	analyser.handleHeader()
 	analyser.setDefault()
 
