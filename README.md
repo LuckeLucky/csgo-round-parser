@@ -21,5 +21,5 @@ Example usage:
      .\demo-analyser-csgo.exe -ot 13000
 ```
 
-If we are parsing the overtime all rounds should have "mp_overtime_startmoney" equal to 13000
+If we are parsing the overtime all rounds in overtime should have "mp_overtime_startmoney" equal to 13000
 
